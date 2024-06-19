@@ -13,8 +13,18 @@ async def get_group_by_id(session:AsyncSession, group_id:int):
     r = await session.execute(q)
     return r.scalar()
 
+async def get_all_groups(session:AsyncSession):
+    q = select(Work_group)
+    r = await session.execute(q)
+    return r.scalars().all()
+
 async def get_users_in_group(session:AsyncSession, group_id:int):
     q = select(User).join(User.work_groups).where(Work_group.id == group_id)
+    r = await session.execute(q)
+    return r.scalars().all()
+
+async def get_all_private_groups(session:AsyncSession, user_id:int):
+    q = select(Work_group).where(Work_group.is_public == False)
     r = await session.execute(q)
     return r.scalars().all()
 
@@ -64,6 +74,10 @@ async def add_group(session:AsyncSession, title:str, is_public:bool):
         title = title,
         is_public = is_public,
     )
+
+    session.add(obj)
+    await session.commit()
+    return obj
 
 
 
