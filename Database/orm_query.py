@@ -1,6 +1,6 @@
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from Database.models import User, Work_group, Work_object
+from Database.models import User, Work_group, Work_object, Admin
 
 
 async def get_user_by_id(session:AsyncSession, user_id:int):
@@ -27,6 +27,11 @@ async def get_all_private_groups(session:AsyncSession, user_id:int):
     q = select(Work_group).where(Work_group.is_public == False)
     r = await session.execute(q)
     return r.scalars().all()
+
+async def get_admin(session:AsyncSession, admin_id:int):
+    q = select(Admin).where(Admin.id == admin_id)
+    r = await session.execute(q)
+    return r.scalar()
 
 
 

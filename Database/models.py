@@ -53,4 +53,9 @@ class Work_object(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)
     title: Mapped[str] = mapped_column(String(40), nullable = False)
 
+class Admin(Base):
+    __tablename__ = "admin"
+    id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)
+    name: Mapped[str] = mapped_column(String(40), nullable = False)
+
     
