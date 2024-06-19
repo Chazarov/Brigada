@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer, Boolean, DateTime, func, Table, ForeignKey
+from sqlalchemy import String, Integer, Boolean, DateTime, func, Table, ForeignKey, Column
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,9 +15,10 @@ class Base(DeclarativeBase):
 
 
 user_workgroup = Table(
-    'user_workgroup', Base.metadata,
-    mapped_column('user_id', ForeignKey('user.id'), primary_key=True),
-    mapped_column('workgroup_id', ForeignKey('work_group.id'), primary_key=True)
+    'user_workgroup', 
+    Base.metadata,
+    Column('user_id', ForeignKey('users.id'), primary_key=True),
+    Column('workgroup_id', ForeignKey('work_groups.id'), primary_key=True)
 )
 
 
@@ -29,7 +30,7 @@ class User(Base):
     phone_number: Mapped[str] = mapped_column(String(40), nullable = False)
 
     work_groups: Mapped[list["Work_group"]] = relationship(
-        'Work_object',
+        'Work_group',
         secondary=user_workgroup,
         back_populates='users'
     )
@@ -37,12 +38,12 @@ class User(Base):
     
 
 class Work_group(Base):
-    __tablename__ = "work groups"
+    __tablename__ = "work_groups"
     id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)
     title: Mapped[str] = mapped_column(String(40), nullable = False)
     is_public: Mapped[bool] = mapped_column(Boolean)
 
-    sers: Mapped[list[User]] = relationship(
+    users: Mapped[list[User]] = relationship(
         'User',
         secondary=user_workgroup,
         back_populates='work_groups'

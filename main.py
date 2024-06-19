@@ -10,11 +10,18 @@ load_dotenv(find_dotenv())
 from Database.engine import as_create_db, session_maker
 from Database.middleweares import DataBaseSession
 
+from TG.admin.handlers import router as admin_router
+from TG.user.handlers import router as users_router 
+
 
 
 
 bot = Bot(token = os.getenv("TOKEN"))
 dp = Dispatcher()
+
+dp.include_router(users_router)
+dp.include_router(admin_router)
+
 
 
 async def on_startup(bot):
