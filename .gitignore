@@ -1,0 +1,4 @@
+draft.py
+**.env
+**__pycache__
+Database/my_base.db
