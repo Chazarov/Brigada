@@ -11,9 +11,8 @@ from Database.engine import as_create_db, session_maker
 from Database.middleweares import DataBaseSession
 from Database.Orm_query import setup_base
 
-from TG.admin.handlers import router as admin_router
-from TG.user.handlers import router as users_router 
-from TG.temp_app.handlers import router as temp_router
+from TG_user.handlers import router as main_router 
+from TG_user.temp_app.handlers import router as temp_router
 
 
 
@@ -21,8 +20,7 @@ from TG.temp_app.handlers import router as temp_router
 bot = Bot(token = os.getenv("TOKEN"))
 dp = Dispatcher()
 
-dp.include_router(users_router)
-dp.include_router(admin_router)
+dp.include_router(main_router)
 dp.include_router(temp_router)
 
 

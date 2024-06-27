@@ -8,11 +8,11 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from TG.filters import user_is_not_registered
+from TG_user.filters import user_is_not_registered
 
 from Database.Orm_query import orm_query
 
-from TG.user.registration.kbds import finish_registration_buttons
+from TG_user.registration.kbds import finish_registration_buttons
 
 
 
