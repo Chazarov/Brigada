@@ -4,14 +4,17 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
+# О назначении классов и полей читать в Database/Readme.txt
 
 class Base(DeclarativeBase):
     created: Mapped[DateTime] = mapped_column(DateTime, default = func.now())
     updated: Mapped[DateTime] = mapped_column(DateTime, default = func.now())
+    not_delete: Mapped[bool] = mapped_column(Boolean, default = False)
 
     async def delete(self, session:AsyncSession):
-        session.delete(self)
-        await session.commit()
+        if(not self.not_delete):
+            session.delete(self)
+            await session.commit()
 
 
 user_workgroup = Table(
@@ -58,5 +61,3 @@ class Admin(Base):
     __tablename__ = "admin"
     id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)
     name: Mapped[str] = mapped_column(String(40), nullable = False)
-
-    

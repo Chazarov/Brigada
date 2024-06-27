@@ -4,7 +4,7 @@ from aiogram.types import Message
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from Database import orm_query as orm
+from Database.Orm_query import orm_query as orm
 
 class user_is_not_registered(Filter):
     def __init__(self) -> None:

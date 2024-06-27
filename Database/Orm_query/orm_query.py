@@ -28,10 +28,15 @@ async def get_all_private_groups(session:AsyncSession, user_id:int):
     r = await session.execute(q)
     return r.scalars().all()
 
-async def get_admin(session:AsyncSession, admin_id:int):
+async def get_admin_by_id(session:AsyncSession, admin_id:int):
     q = select(Admin).where(Admin.id == admin_id)
     r = await session.execute(q)
     return r.scalar()
+
+async def get_all_admins(session:AsyncSession):
+    q = select(Admin)
+    r = await session.execute(q)
+    return r.scalars().all()
 
 
 
@@ -54,36 +59,57 @@ async def user_add_group(session:AsyncSession, user_id:int, group_id:int):
 
 
 
-async def add_user(session:AsyncSession, user_id:int, name:int, phone_number:int, start_group_id:str):
-    q = select(Work_group).where(Work_group.id == start_group_id)
-    r = await session.execute(q)
-    group = r.scalar_one_or_none()
+async def add_user(session:AsyncSession, user_id:int, name:str, phone_number:str, start_group_id:str):
+    group = None
+    if(start_group_id is not None):
+        q = select(Work_group).where(Work_group.id == start_group_id)
+        r = await session.execute(q)
+        group = r.scalar_one_or_none()
 
-    if group is None:
-        raise ValueError(f"Group with id {start_group_id} does not exist")
-   
+        
+    if(group is None):
+        q = select(Work_group).where(Work_group.id == 0)
+        r = await session.execute(q)
+        group = r.scalar()
+
+    
+
     obj = User(
-        id = user_id,
-        name = name,
-        phone_number = phone_number,
-        work_groups = [group]
-
+        id=user_id,
+        name=name,
+        phone_number=phone_number,
+        work_groups=[group]
     )
 
     session.add(obj)
     await session.commit()
     return obj
 
-async def add_group(session:AsyncSession, title:str, is_public:bool):
-    obj = Work_group(
-        title = title,
-        is_public = is_public,
-    )
+async def add_group(session:AsyncSession, title:str, is_public:bool, not_delete = False):
+    if(not not_delete):
+        obj = Work_group(
+            title = title,
+            is_public = is_public,
+        )
+    else:
+        obj = Work_group(
+            title = title,
+            is_public = is_public,
+            not_delete = True
+        )
 
     session.add(obj)
     await session.commit()
     return obj
 
+async def add_admin(session:AsyncSession, admin_id:int, name:str):
+    obj =  Admin(
+        id = admin_id,
+        name = name
+    )
+    session.add(obj)
+    await session.commit()
+    return obj
 
 
 
